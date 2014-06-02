@@ -31,9 +31,15 @@ def getdata(ms,y):
     page2 = opener1.open(nombrefinal)
     my_picture = page2.read()
     coords=my_picture.find('MapCoordinate.pl')
-    lat=my_picture[coords:coords+28].split('=')[1].split('&')[0]
+    try:
+     lat=my_picture[coords:coords+28].split('=')[1].split('&')[0]
 
-    lon=my_picture[coords+28:coords+34].split('>')[0].split('=')[1]
+     lon=my_picture[coords+28:coords+34].split('>')[0].split('=')[1]
+    except:
+     print 'no Latitude'
+     lat=np.nan
+     lon=np.nan
+
     name=my_picture.find("Camera as Recorded in the Camera File:")
     if name ==-1:
         name=my_picture.find("Camera</a>:")
