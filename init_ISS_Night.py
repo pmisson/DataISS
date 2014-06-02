@@ -1,5 +1,6 @@
 # IPython log file
 # -*-coding:utf-8 -*
+import time
 from getdata import *
 datos=asciitable.read('Atlas_of_Night_time_ISS_images.csv')
 names=list(datos.dtype.names)
@@ -32,6 +33,9 @@ datos=mlab.rec_append_fields(datos,'small',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'large',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'Thumbnail',np.zeros(datos.size),dt2)
 for x in range(datos.size):
+    if (x+1)%300==0:
+        time.sleep(900)
+
 #for x in arange(1640,1699):
     #print datos[x]['City']
     ISSname=datos[x]['ISS-ID'].split('-E-')
