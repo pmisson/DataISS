@@ -1,7 +1,9 @@
 # IPython log file
 # -*-coding:utf-8 -*
 from getdata import *
-datos=asciitable.read('TablaISS.csv')
+datos=asciitable.read('Atlas_of_Night_time_ISS_images.csv')
+names=list(datos.dtype.names)
+datos=datos[names[:2]]
 import matplotlib.mlab as mlab
 import geopy
 g=geocoders.Nominatim()
@@ -26,14 +28,17 @@ datos=mlab.rec_append_fields(datos,'Coments',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'NASA',np.zeros(datos.size))
 datos=mlab.rec_append_fields(datos,'CoordFLAG',np.zeros(datos.size))
 datos=mlab.rec_append_fields(datos,'URL',np.zeros(datos.size),dt2)
+datos=mlab.rec_append_fields(datos,'small',np.zeros(datos.size),dt2)
+datos=mlab.rec_append_fields(datos,'large',np.zeros(datos.size),dt2)
+datos=mlab.rec_append_fields(datos,'Thumbnail',np.zeros(datos.size),dt2)
 for x in range(datos.size):
-#for x in arange(320,1432):
-    #print datos[x]['City/Region']
+#for x in arange(0,5):
+    #print datos[x]['City']
     ISSname=datos[x]['ISS-ID'].split('-E-')
     debug=0
     if debug==1:
         try :       
-            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL=getdata(ISSname[0],ISSname[1])
+            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos.Thumbnail=getdata(ISSname[0],ISSname[1])
         except IndexError:
             print 'IndexError:'
             print ISSname
@@ -45,18 +50,18 @@ for x in range(datos.size):
             print 'urllib2.HTTPError:'
             print ISSname
     else:
-        #print str(ISSname)+' '+ datos[x]['City/Region']
+        #print str(ISSname)+' '+ datos[x]['City']
         #
         #print ""
-        #print datos[x]['City/Region']
+        #print datos[x]['City']
         if 1: 
          try:
-            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL=getdata(ISSname[0],ISSname[1])
+            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos.Thumbnail=getdata(ISSname[0],ISSname[1])
          except:
             print getdata(ISSname[0],ISSname[1])
     try:
-     datos[x].latcity,datos[x].loncity=getcity(datos[x]['City/Region'])
-     print str(ISSname)+' '+ datos[x]['City/Region'] 
+     datos[x].latcity,datos[x].loncity=getcity(datos[x]['City'])
+     print str(ISSname)+' '+ datos[x]['City'] 
     except TypeError:
      #print 'No city'
      try:
@@ -65,26 +70,26 @@ for x in range(datos.size):
         if new_place==None:
             new_place=""
         
-        datos[x]['City/Region']=new_place.split(',')[-1].encode('utf-8')
-        print str(ISSname)+' '+datos[x]['City/Region']+' Reverse1'
+        datos[x]['City']=new_place.split(',')[-1].encode('utf-8')
+        print str(ISSname)+' '+datos[x]['City']+' Reverse1'
        else:       
-        datos[x]['City/Region']=city.split('%20')[0].split('-')[0]
-        datos[x].latcity,datos[x].loncity=getcity(datos[x]['City/Region'])
-        print str(ISSname)+' '+ datos[x]['City/Region']+' NASAname1'
+        datos[x]['City']=city.split('%20')[0].split('-')[0]
+        datos[x].latcity,datos[x].loncity=getcity(datos[x]['City'])
+        print str(ISSname)+' '+ datos[x]['City']+' NASAname1'
      except geopy.exc.GeocoderTimedOut:
-       print str(ISSname)+' '+ datos[x]['City/Region']
+       print str(ISSname)+' '+ datos[x]['City']
        print 'Posible bloqueo'
      except TypeError:
-       datos[x]['City/Region']=datos[x]['City/Region'].split('%20')[0].split('-')[0]
+       datos[x]['City']=datos[x]['City'].split('%20')[0].split('-')[0]
        try:
-        datos[x].latcity,datos[x].loncity=getcity(datos[x]['City/Region'])
-        print str(ISSname)+' '+datos[x]['City/Region']+' Reverse2'
+        datos[x].latcity,datos[x].loncity=getcity(datos[x]['City'])
+        print str(ISSname)+' '+datos[x]['City']+' Reverse2'
        except TypeError:
-        print str(ISSname)+' '+datos[x]['City/Region']+' unknown1'
+        print str(ISSname)+' '+datos[x]['City']+' unknown1'
        except geopy.exc.GeocoderTimedOut:
-        print str(ISSname)+' '+datos[x]['City/Region']+' unknown2'
+        print str(ISSname)+' '+datos[x]['City']+' unknown2'
     except AttributeError:
-        print str(ISSname)+' '+datos[x]['City/Region']+' unknown4'
+        print str(ISSname)+' '+datos[x]['City']+' unknown4'
        
     except geopy.exc.GeocoderTimedOut:
      try:
@@ -92,31 +97,31 @@ for x in range(datos.size):
         (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon))
         if new_place==None:
             new_place=""
-        datos[x]['City/Region']=new_place.split(',')[-1].encode('utf-8')
+        datos[x]['City']=new_place.split(',')[-1].encode('utf-8')
        else:       
-        datos[x]['City/Region']=city.split('%20')[0].split('-')[0]
-        datos[x].latcity,datos[x].loncity=getcity(datos[x]['City/Region'])
-       print str(ISSname)+' '+ datos[x]['City/Region']+' NASAname2'
+        datos[x]['City']=city.split('%20')[0].split('-')[0]
+        datos[x].latcity,datos[x].loncity=getcity(datos[x]['City'])
+       print str(ISSname)+' '+ datos[x]['City']+' NASAname2'
      except geopy.exc.GeocoderTimedOut:
-       print str(ISSname)+' '+ datos[x]['City/Region']
+       print str(ISSname)+' '+ datos[x]['City']
        print 'Posible bloqueo'
      except TypeError:
-       print str(ISSname)+' '+datos[x]['City/Region']+'unknown3'
+       print str(ISSname)+' '+datos[x]['City']+'unknown3'
        
        
-    if datos[x]['City/Region']=="":
+    if datos[x]['City']=="":
      if city==-1:
         try:
             (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon))
         except geopy.exc.GeocoderTimedOut:
-            print str(ISSname)+' '+ datos[x]['City/Region']
+            print str(ISSname)+' '+ datos[x]['City']
             print 'Posible bloqueo'
         if new_place==None:
             new_place=""
-        datos[x]['City/Region']=new_place.split(',')[-1].encode('utf-8')
-        print str(ISSname)+' '+ datos[x]['City/Region']+' Reverse 3'
+        datos[x]['City']=new_place.split(',')[-1].encode('utf-8')
+        print str(ISSname)+' '+ datos[x]['City']+' Reverse 3'
      else:
-            datos[x]['City/Region']=str(city)+','+str(country)
+            datos[x]['City']=str(city)+','+str(country)
             #print 'NASAname: '+str(city)+','+str(country)
             
         #datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO=getdata(ISSname[0],ISSname[1])

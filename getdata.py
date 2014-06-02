@@ -24,6 +24,9 @@ def getdata(ms,y):
     opener1 = urllib2.build_opener()
     #y=237318
     madre='http://eol.jsc.nasa.gov/scripts/sseop/photo.pl?mission='+ms+'&roll=E&frame='+str(y)
+    small='http://eol.jsc.nasa.gov/sseop/images/ESC/small/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
+    large='http://eol.jsc.nasa.gov/sseop/images/ESC/large/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
+    thumbnail='http://eol.jsc.nasa.gov/sseop/images/thumb/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
     nombrefinal=madre#+prueba
     page2 = opener1.open(nombrefinal)
     my_picture = page2.read()
@@ -84,7 +87,7 @@ def getdata(ms,y):
         my_picture = page2.read()
         shu=my_picture.find("Shutter:")
         try: 
-            shu=my_picture[shu:shu+64].split('\t\t\t')[1].split('\r\r')[0]
+            shu=my_picture[shu:shu+64].split('\t\t\t')[1].split('\r')[0]
         except IndexError:
          try:
             shu=my_picture[shu:shu+64].split('\r')[0].split()[1]
@@ -102,7 +105,7 @@ def getdata(ms,y):
             
         ap=my_picture.find("Aperture:")
         try: 
-            ap=my_picture[ap:ap+64].split('\t\t\t')[1].split('\r\r')[0]
+            ap=my_picture[ap:ap+64].split('\t\t\t')[1].split('\r')[0]
         except IndexError:
          try:
             ap=my_picture[ap:ap+64].split('\r')[0].split()[1]
@@ -120,7 +123,7 @@ def getdata(ms,y):
             
         ISO=my_picture.find("ISO Speed:")
         try:
-            ISO=my_picture[ISO:ISO+64].split('\t\t\t')[1].split('\r\r')[0]
+            ISO=my_picture[ISO:ISO+64].split('\t\t\t')[1].split('\r')[0]
         except IndexError:
          try:
             ISO=my_picture[ISO:ISO+64].split('\r')[0].split()[2]
@@ -134,7 +137,7 @@ def getdata(ms,y):
             
         MODEL=my_picture.find("MODEL:")
         try:
-            MODEL=my_picture[MODEL:MODEL+64].split('\t\t\t\t')[1].split('\r\r')[0]
+            MODEL=my_picture[MODEL:MODEL+64].split('\t\t\t\t')[1].split('\r')[0]
         except IndexError:
          try:
             MODEL=my_picture[MODEL:MODEL+64].split('\r')[0].split('\t')[1]
@@ -169,7 +172,7 @@ def getdata(ms,y):
     if nlon=="":
         nlon=np.nan   
 
-    return lat,lon,nlat,nlon,MODEL,date,hour,alt,sunazt,sunelv,shu,ap,ISO,city,country,NASA,madre
+    return lat,lon,nlat,nlon,MODEL,date,hour,alt,sunazt,sunelv,shu,ap,ISO,city,country,NASA,madre,small,large,thumbnail
 
 
     
