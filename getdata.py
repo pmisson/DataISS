@@ -24,6 +24,9 @@ def getdata(ms,y):
     opener1 = urllib2.build_opener()
     #y=237318
     madre='http://eol.jsc.nasa.gov/scripts/sseop/photo.pl?mission='+ms+'&roll=E&frame='+str(y)
+    small='http://eol.jsc.nasa.gov/sseop/images/ESC/small/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
+    large='http://eol.jsc.nasa.gov/sseop/images/ESC/large/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
+    Thumbnail='http://eol.jsc.nasa.gov/sseop/images/thumb/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
     nombrefinal=madre#+prueba
     page2 = opener1.open(nombrefinal)
     my_picture = page2.read()
@@ -188,8 +191,8 @@ def getdata(ms,y):
     if nlon=="":
         nlon=np.nan
     name=str(ms)+'-E-'+str(y)
-
-    return ms,y,name,lat,lon,nlat,nlon,MODEL,date,hour,alt,sunazt,sunelv,shu,lens,ap,ISO,city,country,NASA,madre
+    coordimage='http://eol.jsc.nasa.gov/scripts/SSEOP/MapCoordinate/MapCoordinate.pl?lat='+str(nlat)+'&lon='+str(nlon)
+    return lat,lon,nlat,nlon,MODEL,date,hour,alt,sunazt,sunelv,shu,lens,ap,ISO,city,country,NASA,madre,small,large,Thumbnail,coordimage
 
 
     

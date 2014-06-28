@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*
 import time
 from getdata import *
-datos=asciitable.read('Atlas_of_Night_time_ISS_images.csv')
+datos=asciitable.read('Name_city.csv',delimiter=";")
 names=list(datos.dtype.names)
 datos=datos[names[:2]]
 import matplotlib.mlab as mlab
@@ -33,6 +33,7 @@ datos=mlab.rec_append_fields(datos,'URL',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'small',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'large',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'Thumbnail',np.zeros(datos.size),dt2)
+datos=mlab.rec_append_fields(datos,'coordimage',np.zeros(datos.size),dt2)
 for x in range(datos.size):
 #for x in arange(0,5):
     if (x+1)%50==0:
@@ -44,7 +45,7 @@ for x in range(datos.size):
     debug=1
     if debug==1:
         try :       
-            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].lens,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos[x].Thumbnail=getdata(ISSname[0],ISSname[1])
+            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].lens,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos[x].Thumbnail,datos[x].coordimage=getdata(ISSname[0],ISSname[1])
         except IndexError:
             print 'IndexError:'
             print ISSname
@@ -64,7 +65,7 @@ for x in range(datos.size):
         #print datos[x]['City']
         if 1: 
          try:
-            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].lens,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos[x].Thumbnail=getdata(ISSname[0],ISSname[1])
+            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].lens,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos[x].Thumbnail,datos[x].coordimage=getdata(ISSname[0],ISSname[1])
          except:
             print getdata(ISSname[0],ISSname[1])
     try:
