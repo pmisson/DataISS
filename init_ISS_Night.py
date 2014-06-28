@@ -23,6 +23,7 @@ datos=mlab.rec_append_fields(datos,'alt',np.zeros(datos.size))
 datos=mlab.rec_append_fields(datos,'sunazt',np.zeros(datos.size))
 datos=mlab.rec_append_fields(datos,'sunelv',np.zeros(datos.size))
 datos=mlab.rec_append_fields(datos,'shu',np.zeros(datos.size),dt)
+datos=mlab.rec_append_fields(datos,'lens',np.zeros(datos.size),dt)
 datos=mlab.rec_append_fields(datos,'ap',np.zeros(datos.size),dt)
 datos=mlab.rec_append_fields(datos,'ISO',np.zeros(datos.size),dt)
 datos=mlab.rec_append_fields(datos,'Coments',np.zeros(datos.size),dt2)
@@ -33,16 +34,17 @@ datos=mlab.rec_append_fields(datos,'small',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'large',np.zeros(datos.size),dt2)
 datos=mlab.rec_append_fields(datos,'Thumbnail',np.zeros(datos.size),dt2)
 for x in range(datos.size):
-    if (x+1)%300==0:
-        time.sleep(900)
+#for x in arange(0,5):
+    if (x+1)%50==0:
+        time.sleep(100)
 
-#for x in arange(1640,1699):
+
     #print datos[x]['City']
     ISSname=datos[x]['ISS-ID'].split('-E-')
-    debug=0
+    debug=1
     if debug==1:
         try :       
-            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos.Thumbnail=getdata(ISSname[0],ISSname[1])
+            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].lens,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos[x].Thumbnail=getdata(ISSname[0],ISSname[1])
         except IndexError:
             print 'IndexError:'
             print ISSname
@@ -53,6 +55,8 @@ for x in range(datos.size):
         except urllib2.HTTPError:
             print 'urllib2.HTTPError:'
             print ISSname
+        except:
+            print "otras"
     else:
         #print str(ISSname)+' '+ datos[x]['City']
         #
@@ -60,7 +64,7 @@ for x in range(datos.size):
         #print datos[x]['City']
         if 1: 
          try:
-            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos.Thumbnail=getdata(ISSname[0],ISSname[1])
+            datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].lens,datos[x].ap,datos[x].ISO,city,country,datos[x].NASA,datos[x].URL,datos[x].small,datos[x].large,datos[x].Thumbnail=getdata(ISSname[0],ISSname[1])
          except:
             print getdata(ISSname[0],ISSname[1])
     try:
@@ -71,7 +75,7 @@ for x in range(datos.size):
      #print 'No city'
      try:
        if city==-1:
-        (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon))
+        (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon),timeout=10)
         if new_place==None:
             new_place=""
         
@@ -104,7 +108,7 @@ for x in range(datos.size):
     except geopy.exc.GeocoderTimedOut:
      try:
        if city==-1:
-        (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon))
+        (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon),timeout=10)
         if new_place==None:
             new_place=""
         datos[x]['City']=new_place.split(',')[-1].encode('utf-8')
@@ -125,7 +129,7 @@ for x in range(datos.size):
     if datos[x]['City']=="":
      if city==-1:
         try:
-            (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon))
+            (new_place,new_point) = g.reverse((datos[x].nlat,datos[x].nlon),timeout=10)
         except geopy.exc.GeocoderTimedOut:
             print str(ISSname)+' '+ datos[x]['City']
             print 'Posible bloqueo'
@@ -141,4 +145,5 @@ for x in range(datos.size):
             
         #datos[x].lat,datos[x].lon,datos[x].nlat,datos[x].nlon,datos[x].MODEL,datos[x].date,datos[x].hour,datos[x].alt,datos[x].sunazt,datos[x].sunelv,datos[x].shu,datos[x].ap,datos[x].ISO=getdata(ISSname[0],ISSname[1])
         
-datos.tofile('procesed.csv', sep="\n", format="%s")
+#datos.tofile('procesed.csv', sep="\n", format="%s")
+asciitable.write(datos,'procesed_b.csv')

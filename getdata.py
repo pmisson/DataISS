@@ -24,22 +24,13 @@ def getdata(ms,y):
     opener1 = urllib2.build_opener()
     #y=237318
     madre='http://eol.jsc.nasa.gov/scripts/sseop/photo.pl?mission='+ms+'&roll=E&frame='+str(y)
-    small='http://eol.jsc.nasa.gov/sseop/images/ESC/small/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
-    large='http://eol.jsc.nasa.gov/sseop/images/ESC/large/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
-    thumbnail='http://eol.jsc.nasa.gov/sseop/images/thumb/'+ms+'/'+ms+'-E-'+str(y)+'.jpg'
     nombrefinal=madre#+prueba
     page2 = opener1.open(nombrefinal)
     my_picture = page2.read()
     coords=my_picture.find('MapCoordinate.pl')
-    try:
-     lat=my_picture[coords:coords+28].split('=')[1].split('&')[0]
+    lat=my_picture[coords:coords+28].split('=')[1].split('&')[0]
 
-     lon=my_picture[coords+28:coords+34].split('>')[0].split('=')[1]
-    except:
-     print 'no Latitude'
-     lat=np.nan
-     lon=np.nan
-
+    lon=my_picture[coords+28:coords+34].split('>')[0].split('=')[1]
     name=my_picture.find("Camera as Recorded in the Camera File:")
     if name ==-1:
         name=my_picture.find("Camera</a>:")
@@ -108,7 +99,25 @@ def getdata(ms,y):
            except IndexError:    
             shu=np.nan
             print 'no EXP'
-            
+        #####################
+        lens=my_picture.find("Focal Length:")
+        try: 
+            lens=my_picture[lens:lens+64].split('\t\t\t')[1].split('\r')[0]
+        except IndexError:
+         try:
+            lens=my_picture[lens:lens+64].split('\r')[0].split()[1]
+         except IndexError:
+          try:
+            lens=my_picture.find("Lens:")
+            lens=my_picture[lens:lens+64].split('\r')[0].split()[2]
+          except IndexError:
+           try:
+            lens=my_picture.find("Focal")
+            lens=my_picture[lens:lens+64].split('\r')[0].split(':')[1]
+           except IndexError:    
+            lens=np.nan
+            print 'no EXP'
+                  
         ap=my_picture.find("Aperture:")
         try: 
             ap=my_picture[ap:ap+64].split('\t\t\t')[1].split('\r')[0]
@@ -161,6 +170,7 @@ def getdata(ms,y):
         ISO=np.nan
         ap=""
         shu=""
+        lens=""
     if MODEL=="":
         MODEL=cameramodel
     if alt=="":
@@ -176,9 +186,10 @@ def getdata(ms,y):
     if nlat=="":
         nlat=np.nan
     if nlon=="":
-        nlon=np.nan   
+        nlon=np.nan
+    name=str(ms)+'-E-'+str(y)
 
-    return lat,lon,nlat,nlon,MODEL,date,hour,alt,sunazt,sunelv,shu,ap,ISO,city,country,NASA,madre,small,large,thumbnail
+    return ms,y,name,lat,lon,nlat,nlon,MODEL,date,hour,alt,sunazt,sunelv,shu,lens,ap,ISO,city,country,NASA,madre
 
 
     
