@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*
 import time
 from getdata import *
-datos=asciitable.read('Name_city.csv',delimiter=";")
+datos=asciitable.read('Names_ISS.csv',delimiter=";")
 names=list(datos.dtype.names)
 datos=datos[names[:2]]
 import matplotlib.mlab as mlab
